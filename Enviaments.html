@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enviaments | Botiga de Jocs</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+  header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; }
+  header .logo { font-size:1.5em; font-weight:bold; }
+  nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
+  nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+
+  section { max-width:800px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  section h2 { color:#4b0082; margin-bottom:20px; text-align:center; }
+  section h3 { color:#4b0082; margin-top:25px; }
+  section p { line-height:1.5; margin-bottom:15px; color:#333; }
+
+  footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎴 Botiga de Jocs</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inici</a></li>
+        <li><a href="cataleg.html">Catàleg</a></li>
+        <li><a href="contacte.html">Contacte</a></li>
+        <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+        <li><a href="politica.html">Polítiques</a></li>
+        <li><a href="enviaments.html">Enviaments</a></li>
+        <li><a href="mapa.html">Mapa</a></li>
+        <li><a href="accessoris.html">Accessoris</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+  <script>
+    function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    function updateCartCount() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const counter = document.getElementById("cart-count");
+      if (counter) counter.textContent = count;
+    }
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+  </script>
+
+  <section>
+    <h2>Enviaments</h2>
+
+    <h3>Terminis d’entrega</h3>
+    <p>Tots els enviaments es realitzen a Catalunya i Espanya peninsular. El termini estimat és de 2 a 5 dies hàbils des de la confirmació de la comanda.</p>
+
+    <h3>Política de devolucions</h3>
+    <p>Acceptem devolucions en un termini de 14 dies després de rebre el producte. Els articles han d’estar en perfecte estat. Les despeses d’enviament de la devolució són a càrrec del client, excepte defectes o errors en l’enviament.</p>
+
+    <h3>Drets de cancel·lació</h3>
+    <p>Pots cancel·lar la teva comanda dins de les 24 hores següents a la seva confirmació. Passat aquest termini, la cancel·lació no serà possible.</p>
+  </section>
+
+  <footer>
+    <p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+  </footer>
+</body>
+</html>
+
