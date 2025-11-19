@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacte | Botiga de Jocs</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+  header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; }
+  header .logo { font-size:1.5em; font-weight:bold; }
+  nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
+  nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+  
+  section.contact { max-width:600px; margin:50px auto; background:#fff; padding:30px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.1); }
+  section.contact h2 { text-align:center; margin-bottom:30px; color:#4b0082; }
+  
+  form label { display:block; margin-bottom:5px; font-weight:bold; color:#333; }
+  form input, form textarea { width:100%; padding:10px; margin-bottom:20px; border:1px solid #ccc; border-radius:5px; font-size:1em; }
+  form button { width:100%; padding:12px; background:#6a5acd; color:#fff; border:none; border-radius:5px; font-size:1em; cursor:pointer; transition:0.3s; }
+  form button:hover { background:#483d8b; }
+
+  #success-msg { color:green; display:none; text-align:center; margin-top:20px; font-weight:bold; }
+
+  footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+</style>
+
+</head>
+<body>
+  <header>
+    <div class="logo">🎴 Botiga de Jocs</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inici</a></li>
+        <li><a href="cataleg.html">Catàleg</a></li>
+        <li><a href="contacte.html">Contacte</a></li>
+        <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+        <li><a href="politica.html">Polítiques</a></li>
+        <li><a href="enviaments.html">Enviaments</a></li>
+        <li><a href="mapa.html">Mapa</a></li>
+        <li><a href="accessoris.html">Accessoris</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="contact">
+    <h2>Contacta amb nosaltres</h2>
+    <form id="contact-form" action="https://formspree.io/f/xdkydlbg" method="POST">
+      <label for="name">Nom:</label>
+      <input type="text" id="name" name="name" placeholder="El teu nom" required>
+
+      <label for="email">Correu electrònic:</label>
+      <input type="email" id="email" name="email" placeholder="exemple@correu.com" required>
+
+      <label for="message">Missatge:</label>
+      <textarea id="message" name="message" rows="5" placeholder="Escriu aquí el teu missatge..." required></textarea>
+
+      <button type="submit">Enviar</button>
+    </form>
+    <p id="success-msg">Gràcies per enviar el missatge! Ens posarem en contacte amb tu aviat.</p>
+  </section>
+
+  <footer>
+    <p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+  </footer>
+
+  <script>
+    // Cart counter (global)
+    function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    function updateCartCount() {
+      const cart = getCart();
+      const count = cart.reduce((sum, item) => sum + item.qty, 0);
+      const counter = document.getElementById("cart-count");
+      if (counter) counter.textContent = count;
+    }
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+
+    function addToCart(id, qty = 1) {
+      let cart = getCart();
+      const existing = cart.find(item => item.id === id);
+      if (existing) existing.qty += qty;
+      else {
+        const product = window.products.find(p => p.id === id);
+        if (!product) return;
+        cart.push({ ...product, qty });
+      }
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    }
+    function removeFromCart(id) {
+      let cart = getCart();
+      cart = cart.filter(item => item.id !== id);
+      localStorage.setItem("cart", JSON.stringify(cart));
+      updateCartCount();
+    }
+    function clearCart() {
+      localStorage.removeItem("cart");
+      updateCartCount();
+    }
+
+    // Handle Formspree submission
+    const form = document.getElementById('contact-form');
+    const successMsg = document.getElementById('success-msg');
+
+    form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const response = await fetch(form.action, {
+        method: form.method,
+        body: formData,
+        headers: { 'Accept': 'application/json' }
+      });
+      if (response.ok) {
+        successMsg.style.display = 'block';
+        form.reset();
+      } else {
+        alert('Hi ha hagut un error. Torna-ho a provar.');
+      }
+    });
+  </script>
+</body>
+</html>
