@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Catàleg - Botiga de Jocs</title>
+<style>
+  body { font-family: Arial; background:#f4f4f4; margin:0; padding:0; }
+  header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; }
+  nav ul { list-style:none; display:flex; gap:15px; padding:0; margin:0; }
+  nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+  #products-container { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding:20px; }
+  .product { background:#fff; padding:10px; width:220px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; position:relative; transition: transform 0.2s; }
+  .product:hover { transform: translateY(-5px); }
+  .product img { width:100%; border-radius:5px; }
+  .product h3 { margin:10px 0 5px; color:#4b0082; }
+  .product p { margin:5px 0; font-size:0.9em; color:#555; }
+  .product .price { font-weight:bold; margin:5px 0; display:block; color:#6a5acd; }
+  .product button { padding:5px 10px; background:#6a5acd; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+  .product button:hover { background:#483d8b; }
+
+  /* SUCCESS MESSAGE */
+  .added-msg {
+    color:green;
+    font-size:0.9em;
+    margin-top:5px;
+    font-weight:bold;
+    opacity:0;
+    transition:opacity 0.3s ease;
+  }
+</style>
+
+</head>
+<body>
+
+
+<header>
+  <div class="logo">🎴 Botiga de Jocs</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inici</a></li>
+      <li><a href="cataleg.html">Catàleg</a></li>
+      <li><a href="contacte.html">Contacte</a></li>
+      <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+      <li><a href="politica.html">Polítiques</a></li>
+      <li><a href="enviaments.html">Enviaments</a></li>
+      <li><a href="mapa.html">Mapa</a></li>
+      <li><a href="accessoris.html">Accessoris</a></li>
+      <li><a href="blog.html">Blog</a></li>
+    </ul>
+  </nav>
+</header>
+
+<h2>Els nostres jocs</h2>
+<div id="products-container"></div>
+
+<footer style="text-align:center; padding:20px; background:#ff5e5e; color:#fff; margin-top:40px;">
+  <p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+</footer>
+
+
+<script>
+/* ===== PRODUCTS ===== */
+window.products = [
+  { id:1, name:"Speedy Grab", price:9.99, img:"https://i.ibb.co/Y4YswDv1/Screenshot-2025-11-05-104047.png", desc:"Agafa-ho tot abans que sigui massa tard!" },
+  { id:2, name:"CityScape", price:14.99, img:"https://i.ibb.co/20tgyjQT/City-scape.jpg", desc:"Explora la ciutat jugant!" },
+  { id:3, name:"Up", price:11.99, img:"https://i.ibb.co/VY4tr2XY/Up.jpg", desc:"El número més alt guanya!" },
+  { id:4, name:"Quien se la queda", price:13.99, img:"https://i.ibb.co/V0bJSZND/image-1.png", desc:"Qui tingui més cartes guanya!" },
+  { id:5, name:"Urbatica", price:12.99, img:"https://i.ibb.co/2HPM76W/Urb-tica.jpg", desc:"La ciutat més sostenible!" },
+  { id:6, name:"Huella", price:20, img:"https://i.ibb.co/zhzGWgnT/Screenshot-20251106-112415-Chrome.jpg", desc:"Un repte abans de morir" },
+  { id:7, name:"La Falsa Identitat", price:14.99, img:"https://i.ibb.co/SXHgb3XK/La-falsa-Identitat.png", desc:"Descobriu qui menteix entre vosaltres!" },
+  { id:8, name:"Ciutat en crisi", price:14.99, img:"https://i.ibb.co/tMGWv8hP/Screenshot-2025-11-05-at-11-49-52.png", desc:"Col·laboreu per salvar una ciutat!" }
+];
+
+/* ===== CART SYSTEM ===== */
+function getCart() {
+  return JSON.parse(localStorage.getItem("cart") || "[]");
+}
+
+function saveCart(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+  updateCartCount();
+}
+
+function addToCart(id, qty = 1) {
+  const cart = getCart();
+  const existing = cart.find(item => item.id === id);
+
+  if (existing) {
+    existing.qty += qty;
+  } else {
+    const product = window.products.find(p => p.id === id);
+    if (!product) return;
+    cart.push({ ...product, qty });
+  }
+
+  saveCart(cart);
+}
+
+function updateCartCount() {
+  const cart = getCart();
+  const count = cart.reduce((sum, x) => sum + x.qty, 0);
+  document.getElementById("cart-count").textContent = count;
+}
+
+/* ===== RENDER PRODUCTS ===== */
+function renderProducts() {
+  const container = document.getElementById("products-container");
+  container.innerHTML = "";
+
+  window.products.forEach(p => {
+    const div = document.createElement("div");
+    div.className = "product";
+
+    div.innerHTML = `
+      <img src="${p.img}" alt="${p.name}">
+      <h3>${p.name}</h3>
+      <p>${p.desc}</p>
+      <span class="price">€${p.price.toFixed(2)}</span>
+      <button>Compra</button>
+      <div class="added-msg">Afegit al carret!</div>
+    `;
+
+    const msg = div.querySelector(".added-msg");
+
+    div.querySelector("button").addEventListener("click", () => {
+      addToCart(p.id);
+
+      // Show success message without alert
+      msg.style.opacity = "1";
+      setTimeout(() => { msg.style.opacity = "0"; }, 1500);
+    });
+
+    container.appendChild(div);
+  });
+}
+
+/* ===== INIT ===== */
+document.addEventListener("DOMContentLoaded", () => {
+  renderProducts();
+  updateCartCount();
+});
+</script>
+
+</body>
+</html>
+
+
