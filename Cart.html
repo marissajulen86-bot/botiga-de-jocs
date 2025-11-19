@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carret de la Botiga</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; }
+header .logo { font-size:1.5em; font-weight:bold; }
+nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
+nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+
+table { width:100%; border-collapse: collapse; background:#fff; margin:40px auto; max-width:900px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+th, td { border:1px solid #ccc; padding:10px; text-align:center; }
+th { background:#e6e0ff; color:#4b0082; }
+td img { width:60px; border-radius:5px; }
+input { width:50px; text-align:center; }
+button { padding:5px 10px; background:#6a5acd; color:#fff; border:none; border-radius:5px; cursor:pointer; }
+button:hover { background:#483d8b; }
+
+#cart-total { text-align:right; max-width:900px; margin:10px auto; font-weight:bold; color:#4b0082; }
+.clear-btn, .pay-btn { display:block; max-width:900px; margin:20px auto; padding:12px 20px; border:none; border-radius:5px; cursor:pointer; text-align:center; font-size:1em; text-decoration:none; color:#fff; }
+.clear-btn { background:#6a5acd; }
+.clear-btn:hover { background:#483d8b; }
+.pay-btn { background:#ff5e5e; }
+.pay-btn:hover { background:#e04e4e; }
+
+.card-placeholder { width:60px; height:60px; background:#eee; display:flex; align-items:center; justify-content:center; font-size:0.8em; color:#555; border-radius:5px; }
+.card-preview { width:120px; height:160px; border:1px solid #ccc; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#fff; border-radius:5px; overflow:hidden; padding:5px; }
+.card-preview img { max-width:90%; max-height:60%; }
+.card-preview span { font-weight:bold; font-size:0.9em; text-align:center; margin-top:5px; color:#4b0082; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">🎴 Botiga de Jocs</div>
+  <nav>
+    <ul>
+        <li><a href="index.html">Inici</a></li>
+        <li><a href="cataleg.html">Catàleg</a></li>
+        <li><a href="contacte.html">Contacte</a></li>
+        <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+        <li><a href="politica.html">Polítiques</a></li>
+        <li><a href="enviaments.html">Enviaments</a></li>
+        <li><a href="mapa.html">Mapa</a></li>
+        <li><a href="accessoris.html">Accessoris</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+  </nav>
+</header>
+
+<h1 style="text-align:center; margin-top:40px;">El teu Carret</h1>
+
+<table id="cart-table">
+  <thead>
+    <tr>
+      <th>Imatge</th>
+      <th>Producte</th>
+      <th>Quantitat</th>
+      <th>Preu unitari</th>
+      <th>Total</th>
+      <th>Eliminar</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<p id="cart-total">Total: €0.00</p>
+<button class="clear-btn" onclick="clearCart()">Buidar Carret</button>
+
+<!-- Proceed to payment -->
+<button class="pay-btn" id="pay-btn">Anar a Pagament</button>
+
+<script>
+// STATIC CART EXAMPLE (replace with your real cart logic)
+let cart = [
+  { id: 1, name: "Dau Màgic", qty: 2, price: 5.0, img: "images/dau.jpg" },
+  { id: 2, name: "Marc de cartes", qty: 1, price: 8.0, img: "images/marc.jpg" }
+];
+
+// RENDER CART
+function renderCart() {
+  const tbody = document.querySelector("#cart-table tbody");
+  tbody.innerHTML = "";
+  let total = 0;
+
+  if(cart.length === 0){
+    tbody.innerHTML = `<tr><td colspan="6">El carret està buit.</td></tr>`;
+  } else {
+    cart.forEach(item => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td><img src="${item.img}" alt="${item.name}"></td>
+        <td>${item.name}</td>
+        <td>${item.qty}</td>
+        <td>${item.price.toFixed(2)} €</td>
+        <td>${(item.price*item.qty).toFixed(2)} €</td>
+        <td><button onclick="removeFromCart(${item.id})">X</button></td>
+      `;
+      tbody.appendChild(tr);
+      total += item.price * item.qty;
+    });
+  }
+
+  document.getElementById("cart-total").textContent = "Total: €" + total.toFixed(2);
+}
+
+// REMOVE ITEM
+function removeFromCart(id){
+  cart = cart.filter(item => item.id !== id);
+  renderCart();
+}
+
+// CLEAR CART
+function clearCart(){
+  cart = [];
+  renderCart();
+}
+
+// PAY BUTTON
+document.getElementById('pay-btn').addEventListener('click', function(){
+  if(cart.length === 0){
+    alert("El carret està buit!");
+    return;
+  }
+  // Save cart to sessionStorage for pagament-senzill.html
+  sessionStorage.setItem("cart", JSON.stringify(cart));
+  window.location.href = "pagament-senzill.html";
+});
+
+// INITIAL RENDER
+renderCart();
+</script>
+
+</body>
+</html>
