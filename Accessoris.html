@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Accessoris | Botiga de Jocs</title>
+<link rel="stylesheet" href="style.css">
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; flex-wrap:wrap; }
+header .logo { font-size:1.5em; font-weight:bold; margin-bottom:5px; }
+nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; flex-wrap:wrap; }
+nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+
+section { padding:40px 20px; text-align:center; }
+h2 { margin-bottom:20px; color:#4b0082; }
+
+.accessory-grid { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; }
+.accessory { background:#fff; padding:15px; width:250px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.accessory img { width:100%; height:auto; border-radius:5px; }
+.accessory h3 { margin:10px 0 5px; color:#4b0082; }
+.accessory p { font-size:0.9em; margin:5px 0; color:#333; }
+.accessory .price { font-weight:bold; margin-top:5px; color:#4b0082; }
+
+.btn { display:inline-block; margin-top:10px; padding:8px 15px; background-color:#6a5acd; color:#fff; text-decoration:none; border-radius:5px; cursor:pointer; }
+.btn:hover { background-color:#483d8b; }
+
+.card-designer { background:#fff; padding:15px; margin-top:20px; border-radius:8px; width:300px; margin-left:auto; margin-right:auto; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.card-designer input, .card-designer select { width:100%; padding:5px; margin:5px 0 10px; border-radius:4px; border:1px solid #ccc; }
+
+#card-preview { width:220px; height:300px; border:1px solid #ccc; margin:10px auto; display:flex; align-items:center; justify-content:center; background:#fff; position:relative; font-weight:bold; overflow:hidden; }
+#card-preview img { max-width:80%; max-height:50%; margin-bottom:10px; }
+#card-preview .text { position:absolute; bottom:10px; left:5px; right:5px; font-weight:bold; word-wrap:break-word; text-align:center; color:#4b0082; }
+
+footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+
+@media (max-width:600px) {
+  header { justify-content:center; }
+  nav ul { justify-content:center; gap:10px; }
+  .accessory-grid { flex-direction:column; align-items:center; }
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🎴 Botiga de Jocs</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Inici</a></li>
+      <li><a href="cataleg.html">Catàleg</a></li>
+      <li><a href="contacte.html">Contacte</a></li>
+      <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+      <li><a href="politica.html">Polítiques</a></li>
+      <li><a href="enviaments.html">Enviaments</a></li>
+      <li><a href="mapa.html">Mapa</a></li>
+      <li><a href="accessoris.html">Accessoris</a></li>
+      <li><a href="blog.html">Blog</a></li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+function updateCartCount(){ const cart=getCart(); const count=cart.reduce((s,i)=>s+i.qty,0); const counter=document.getElementById("cart-count"); if(counter)counter.textContent=count; }
+updateCartCount(); window.addEventListener('storage',updateCartCount);
+
+function addToCart(product){
+  const cart=getCart();
+  const existing=cart.find(i=>i.id===product.id);
+  if(existing){ existing.qty+=product.qty||1; } else{ cart.push({...product, qty:product.qty||1}); }
+  localStorage.setItem("cart",JSON.stringify(cart));
+  updateCartCount();
+  showToast(product.name+" afegit al carret!");
+}
+
+function showToast(msg){
+  const toast=document.createElement('div');
+  toast.textContent=msg;
+  toast.style.position='fixed';
+  toast.style.bottom='20px';
+  toast.style.right='20px';
+  toast.style.background='#ff5e5e';
+  toast.style.color='#fff';
+  toast.style.padding='10px 15px';
+  toast.style.borderRadius='5px';
+  toast.style.boxShadow='0 2px 6px rgba(0,0,0,0.2)';
+  toast.style.opacity='0';
+  toast.style.transition='opacity 0.5s';
+  document.body.appendChild(toast);
+  setTimeout(()=>{ toast.style.opacity='1'; },100);
+  setTimeout(()=>{ toast.style.opacity='0'; setTimeout(()=>{ document.body.removeChild(toast); },500); },2500);
+}
+</script>
+
+<section>
+<h2>Accessoris</h2>
+<div class="accessory-grid" id="accessory-grid"></div>
+</section>
+
+<section class="card-designer">
+<h2>Edicions Especials</h2>
+<label for="base-game">Escull el joc base:</label>
+<select id="base-game"></select>
+
+<label for="custom-text">Text personalitzat:</label>
+<input type="text" id="custom-text" placeholder="Escriu el text que vols a la carta">
+
+<label for="custom-image">Escull una imatge o puja una:</label>
+<select id="image-select"></select>
+<input type="file" id="custom-image" accept="image/*">
+
+<div id="card-preview"><span class="text">Preview</span></div>
+<button class="btn" onclick="addCustomCard()">Afegeix al carret</button>
+</section>
+
+<script>
+const accessories = [
+  { id:1,name:"Cai Cards",price:9.99,img:"https://i.ibb.co/KJCh8Zq/Screenshot-2025-11-11-102915.png",desc:"Caixa per cartes feta de fusta" },
+  { id:2,name:"Cards Storage",price:12.50,img:"https://i.ibb.co/35sqrXZw/Screenshot-2025-11-12-120203.png",desc:"Caixa de plàstic per emmagatzemar cartes" }
+];
+
+const grid=document.getElementById("accessory-grid");
+accessories.forEach(item=>{
+  const div=document.createElement("div");
+  div.className="accessory";
+  div.innerHTML=`<img src="${item.img}" alt="${item.name}">
+  <h3>${item.name}</h3>
+  <p>${item.desc}</p>
+  <div class="price">${item.price.toFixed(2)} €</div>
+  <button class="btn" onclick='addToCart(${JSON.stringify(item)})'>Afegeix al carret</button>`;
+  grid.appendChild(div);
+});
+
+// Card Designer
+const games=["Speedy Grab","CityScape","Up","Qui se les queda","Urbatica","Huella","Ciutat en crisi","La Falsa Identitat"];
+const baseSelect=document.getElementById("base-game");
+games.forEach(g=>{ const opt=document.createElement("option"); opt.value=g; opt.textContent=g; baseSelect.appendChild(opt); });
+
+const gameImages={
+  "Speedy Grab":"https://i.ibb.co/XYZ.png",
+  "CityScape":"https://i.ibb.co/XYZ.png",
+  "Up":"https://i.ibb.co/XYZ.png",
+  "Qui se les queda":"https://i.ibb.co/XYZ.png",
+  "Urbatica":"https://i.ibb.co/XYZ.png",
+  "Huella":"https://i.ibb.co/XYZ.png",
+  "Ciutat en crisi":"https://i.ibb.co/XYZ.png",
+  "La Falsa Identitat":"https://i.ibb.co/XYZ.png"
+};
+
+const imageSelect=document.getElementById("image-select");
+games.forEach(g=>{
+  const opt=document.createElement("option");
+  opt.value=gameImages[g];
+  opt.textContent=g;
+  imageSelect.appendChild(opt);
+});
+
+const textInput=document.getElementById("custom-text");
+const fileInput=document.getElementById("custom-image");
+const preview=document.getElementById("card-preview");
+const previewText=preview.querySelector(".text");
+let selectedImg="";
+
+imageSelect.addEventListener("change",()=>{ selectedImg=imageSelect.value; updatePreview(); });
+fileInput.addEventListener("change",e=>{
+  const file=e.target.files[0];
+  if(file){
+    const reader=new FileReader();
+    reader.onload=function(ev){ selectedImg=ev.target.result; updatePreview(); }
+    reader.readAsDataURL(file);
+  }
+});
+textInput.addEventListener("input",updatePreview);
+baseSelect.addEventListener("change",updatePreview);
+
+function updatePreview(){
+  preview.innerHTML="";
+  if(selectedImg){
+    const img=document.createElement("img"); img.src=selectedImg; preview.appendChild(img);
+  }
+  const span=document.createElement("span"); span.className="text"; span.textContent=textInput.value||"Preview"; preview.appendChild(span);
+}
+
+function addCustomCard(){
+  const customCard={
+    id:Date.now(),
+    name:baseSelect.value+" (Personalitzada)",
+    price:15,
+    qty:1,
+    customText:textInput.value,
+    baseGame:baseSelect.value,
+    customImage:selectedImg
+  };
+  addToCart(customCard);
+  textInput.value=""; fileInput.value=""; imageSelect.selectedIndex=0; selectedImg=""; updatePreview();
+}
+</script>
+
+<footer>
+<p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+</footer>
+</body>
+</html>
+
+
