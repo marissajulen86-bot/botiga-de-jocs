@@ -1,0 +1,61 @@
+/* --- General --- */
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; flex-wrap:wrap; }
+header .logo { font-size:1.5em; font-weight:bold; }
+nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; flex-wrap:wrap; }
+nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+section { padding:40px 20px; text-align:center; }
+h2 { margin-bottom:20px; color:#4b0082; }
+.btn { display:inline-block; padding:10px 20px; background-color:#6a5acd; color:#fff; text-decoration:none; border-radius:5px; cursor:pointer; }
+.btn:hover { background-color:#483d8b; }
+
+/* --- Hero --- */
+.hero { background:#72b5db; padding:60px 20px; }
+.hero h1 { font-size:2em; margin-bottom:10px; color:#4b0082; }
+.hero p { font-size:1.2em; margin-bottom:20px; color:#333; }
+
+/* --- Products / Accessories --- */
+.product, .accessory { background:#6d3499; padding:10px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:center; }
+.product img, .accessory img { width:100%; border-radius:5px; }
+.product h3, .accessory h3 { color:#4b0082; }
+.product p, .accessory p { color:#333; }
+.product .price, .accessory .price { color:#4b0082; font-weight:bold; margin-top:5px; }
+
+/* --- Product Detail --- */
+.product-detail { max-width:800px; margin:40px auto; background:#fff; padding:20px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); display:flex; flex-wrap:wrap; gap:20px; }
+.product-detail img { width:100%; max-width:350px; border-radius:8px; }
+.product-info { flex:1; min-width:250px; }
+
+/* --- Cart --- */
+table { width:100%; border-collapse: collapse; background:#fff; margin:40px auto; max-width:900px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+th, td { border:1px solid #544a63; padding:10px; text-align:center; }
+th { background:#7d08e2; color:#fff; }
+td img { width:60px; border-radius:5px; }
+input[type=number] { width:50px; text-align:center; }
+
+/* --- Forms --- */
+form input, form textarea { width:100%; padding:10px; margin-bottom:20px; border:1px solid #ccc; border-radius:5px; font-size:1em; }
+form button { width:100%; padding:12px; background:#6a5acd; color:#fff; border:none; border-radius:5px; font-size:1em; cursor:pointer; transition:0.3s; }
+form button:hover { background:#483d8b; }
+
+/* --- Footer --- */
+footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+
+/* --- Responsive Design --- */
+@media (max-width: 768px) {
+  header { flex-direction: column; align-items: flex-start; }
+  nav ul { flex-direction: column; width: 100%; gap:10px; margin-top:10px; }
+  .hero h1 { font-size:1.5em; }
+  .hero p { font-size:1em; }
+  .product-detail { flex-direction: column; align-items: center; }
+  table, th, td { font-size:0.9em; }
+  td img { width:50px; }
+}
+
+@media (max-width: 480px) {
+  .hero { padding:40px 10px; }
+  section { padding:30px 10px; }
+  .btn { padding:8px 16px; font-size:0.9em; }
+  table, th, td { font-size:0.8em; }
+  input[type=number] { width:40px; }
+}
