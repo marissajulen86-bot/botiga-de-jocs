@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog | Botiga de Jocs</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+  body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+  header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; }
+  header .logo { font-size:1.5em; font-weight:bold; }
+  nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; }
+  nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+  section { padding:40px 20px; text-align:center; }
+  h2 { margin-bottom:20px; color:#4b0082; }
+  .btn { display:inline-block; padding:10px 20px; background-color:#6a5acd; color:#fff; text-decoration:none; border-radius:5px; }
+  .btn:hover { background-color:#483d8b; }
+  .hero { background:#e6e0ff; padding:60px 20px; } /* light violet background */
+  .hero h1 { font-size:2em; margin-bottom:10px; color:#4b0082; }
+  .hero p { font-size:1.2em; margin-bottom:20px; color:#333; }
+  .qui-som { background:#fff; padding:20px; margin-top:40px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.1); max-width:800px; margin-left:auto; margin-right:auto; text-align:left; }
+  .qui-som h2 { text-align:center; color:#4b0082; }
+  .mvv { display:flex; flex-wrap:wrap; gap:20px; justify-content:center; margin-top:20px; }
+  .mvv div { background:#fff; padding:20px; border-radius:8px; width:250px; box-shadow:0 2px 6px rgba(0,0,0,0.1); text-align:left; }
+  .mvv h3 { margin-bottom:10px; color:#4b0082; }
+  footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+</style>
+
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <div class="logo">🎴 Botiga de Jocs</div>
+    <nav>
+      <ul>
+        <li><a href="index.html">Inici</a></li>
+        <li><a href="cataleg.html">Catàleg</a></li>
+        <li><a href="contacte.html">Contacte</a></li>
+        <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+        <li><a href="politica.html">Polítiques</a></li>
+        <li><a href="enviaments.html">Enviaments</a></li>
+        <li><a href="mapa.html">Mapa</a></li>
+        <li><a href="accessoris.html">Accessoris</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+  <script>
+  // Function to get cart from localStorage
+  function getCart() {
+    return JSON.parse(localStorage.getItem("cart") || "[]");
+  }
+
+
+  // Function to update the cart count
+  function updateCartCount() {
+    const cart = getCart();
+    const count = cart.reduce((sum, item) => sum + item.qty, 0);
+    const counter = document.getElementById("cart-count");
+    if (counter) counter.textContent = count;
+  }
+
+
+  // Initial count
+  updateCartCount();
+
+
+  // Listen for changes in other tabs
+  window.addEventListener('storage', updateCartCount);
+
+
+  // Global function to add product (works with your cart.js)
+  function addToCart(id, qty = 1) {
+    let cart = getCart();
+    const existing = cart.find(item => item.id === id);
+    if (existing) {
+      existing.qty += qty;
+    } else {
+      // Find product info from products array
+      const product = window.products.find(p => p.id === id);
+      if (!product) return;
+      cart.push({ ...product, qty });
+    }
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount(); // ✅ update counter immediately
+  }
+
+
+  // Global function to remove item
+  function removeFromCart(id) {
+    let cart = getCart();
+    cart = cart.filter(item => item.id !== id);
+    localStorage.setItem("cart", JSON.stringify(cart));
+    updateCartCount();
+  }
+
+
+  // Clear cart globally
+  function clearCart() {
+    localStorage.removeItem("cart");
+    updateCartCount();
+  }
+</script>
+
+
+
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Descobreix els millors jocs de taula i cartes per a totes les edats</h1>
+    <p>Diversió garantida per a tothom!</p>
+    <!-- Link to catalog page -->
+    <a href="cataleg.html" class="btn">Explora els Jocs</a>
+  </section>
+
+
+  <!-- Qui Som Section -->
+  <section class="qui-som">
+    <h2>Qui Som</h2>
+    <p>Som una botiga de jocs de taula per a totes les edats i gustos. Ens apassiona el món dels jocs i volem compartir aquesta passió amb tothom: famílies, amics, jugadors experts o qui descobreix aquest univers per primera vegada. Al nostre espai trobaràs jocs per riure, pensar, competir o cooperar — però sobretot, per gaudir.</p>
+  </section>
+
+
+  <!-- Missió, Visió i Valors Section -->
+  <section>
+    <h2>Missió, Visió i Valors</h2>
+    <div class="mvv">
+      <div>
+        <h3>Missió</h3>
+        <p>La nostra missió és fer arribar la màgia dels jocs de taula a tothom, creant moments de diversió, connexió i creativitat. Volem ser un punt de trobada per a la comunitat jugadora, on cada persona pugui descobrir el joc perfecte per a ella.</p>
+      </div>
+      <div>
+        <h3>Visió</h3>
+        <p>Aspiram a ser una referència en el món dels jocs de taula a Catalunya, fomentant una cultura lúdica més social, inclusiva i sostenible. Somiem amb un món on jugar sigui sinònim de compartir, aprendre i créixer junts.</p>
+      </div>
+      <div>
+        <h3>Valors</h3>
+        <p>Passió pel joc: Creiem en el poder del joc per unir les persones.<br>
+           Comunitat: Ens agrada crear espais on tothom se senti benvingut.<br>
+           Qualitat i diversitat: Seleccionem jocs únics per a tots els gustos i nivells.<br>
+           Sostenibilitat: Donem valor a productes i marques responsables amb el planeta.<br>
+           Aprenentatge: Cada partida és una oportunitat per descobrir alguna cosa nova.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Footer -->
+  <footer>
+    <p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+  </footer>
+
+
+  <!-- JS -->
+  <script src="js/cart.js"></script>
+</body>
+</html>
+
+
