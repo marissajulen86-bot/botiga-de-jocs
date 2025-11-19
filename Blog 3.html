@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CyberRace Neon Edition | Botiga de Jocs</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f4f4f4; }
+    header { display:flex; justify-content: space-between; align-items:center; padding:10px 20px; background:#6a5acd; color:#fff; flex-wrap:wrap; }
+    header .logo { font-size:1.5em; font-weight:bold; margin-bottom:5px; }
+    nav ul { list-style:none; display:flex; gap:15px; margin:0; padding:0; flex-wrap:wrap; }
+    nav ul li a { color:#fff; text-decoration:none; font-weight:bold; }
+    section { padding:40px 20px; max-width:800px; margin:0 auto; text-align:left; }
+    h2 { margin-bottom:20px; color:#4b0082; }
+    img { width:100%; height:auto; border-radius:8px; margin-bottom:20px; }
+    p { font-size:1em; margin-bottom:15px; color:#555; line-height:1.6; }
+    .btn { display:inline-block; padding:10px 15px; background-color:#6a5acd; color:#fff; text-decoration:none; border-radius:5px; font-size:0.9em; margin-top:20px; }
+    .btn:hover { background-color:#483d8b; }
+    footer { text-align:center; padding:20px; background:#6a5acd; color:#fff; margin-top:40px; }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">🎴 Botiga de Jocs</div>
+    <nav>
+       <ul>
+        <li><a href="index.html">Inici</a></li>
+        <li><a href="cataleg.html">Catàleg</a></li>
+        <li><a href="contacte.html">Contacte</a></li>
+        <li><a href="cart.html">Carret (<span id="cart-count">0</span>)</a></li>
+        <li><a href="politica.html">Polítiques</a></li>
+        <li><a href="enviaments.html">Enviaments</a></li>
+        <li><a href="mapa.html">Mapa</a></li>
+        <li><a href="accessoris.html">Accessoris</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <script>
+    function getCart() { return JSON.parse(localStorage.getItem("cart") || "[]"); }
+    function updateCartCount() {
+      const count = getCart().reduce((sum, item) => sum + item.qty, 0);
+      const counter = document.getElementById("cart-count");
+      if (counter) counter.textContent = count;
+    }
+    updateCartCount();
+    window.addEventListener('storage', updateCartCount);
+  </script>
+
+  <section>
+    <h2>CyberRace Neon Edition</h2>
+    <img src="https://i.ibb.co/zTGm0GKN/Cyber-race.jpg" alt="CyberRace Neon Edition">
+    <p>La <em>CyberRace Neon Edition</em> és una edició limitada amb miniatures neó i un tauler metàl·lic que farà que cada cursa sigui espectacular.</p>
+    <p>A més de la presentació única, incorpora regles especials i desafiaments addicionals que augmenten l’adrenalina i la competència entre jugadors.</p>
+    <p>Ideal per a entusiastes de la ciència-ficció i col·leccionistes que busquen una experiència de joc diferent i intensa.</p>
+    <a href="blog.html" class="btn">Torna al Blog</a>
+  </section>
+
+  <footer>
+    <p>© 2025 Botiga de Jocs — Tots els drets reservats</p>
+  </footer>
+</body>
